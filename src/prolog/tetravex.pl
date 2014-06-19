@@ -47,7 +47,7 @@
 solucao(Jogo, Blocos) :-
     tetravex(_, _, R) = Jogo,
     permutation(Blocos, R),
-    blocos_correspondem(Jogo), !.
+    blocos_correspondem(Jogo).
 
 
 %% blocos_correspondem(Jogo?) is semidet
@@ -58,7 +58,7 @@ solucao(Jogo, Blocos) :-
 
 blocos_correspondem(Jogo) :-
 	bloco_pos(Jogo, Pos, _),
-	corresponde_acima(Jogo, Pos),
+	corresponde_acima(Jogo, Pos),!,
 	corresponde_direita(Jogo, Pos).
 
 %% corresponde_esquerda(Jogo+, Pos) is semidet
@@ -68,15 +68,17 @@ blocos_correspondem(Jogo) :-
 % Pos deve ser igual ao valor da borda esquerda do bloco a direita de
 % Pos. Se Pos esta na borda direita, entao a posiçao direita
 % corresponde.
+
 corresponde_direita(Jogo, Pos) :-
 	na_borda_direita(Jogo, Pos).
 
 corresponde_direita(Jogo, Pos) :-
 	pos_direita(Pos, PosDireita),
 	bloco_pos(Jogo, Pos, Bloco),
-	bloco_pos(Jogo, PosDireita, BlocoDireita),
+	bloco_pos(Jogo, PosDireita, BlocoDireita),!,
 	bloco(_, Face, _, _) = Bloco,
 	bloco(_, _, _, Face) = BlocoDireita.
+
 
 %% corresponde_acima(Jogo+, Pos) is semidet
 %
@@ -84,15 +86,17 @@ corresponde_direita(Jogo, Pos) :-
 %  de Pos em Jogo. Isto é, o valor da borda superior do bloco em Pos deve ser
 %  igual ao valor da borda inferior do bloco acima de Pos. Se Pos está na borda
 %  superior, então a posição acima corresponde.
+
 corresponde_acima(Jogo, Pos) :-
 	na_borda_superior(Jogo, Pos).
 
 corresponde_acima(Jogo, Pos) :-
 	pos_acima(Jogo, Pos, Acima),
 	bloco_pos(Jogo, Pos, BlocoAbaixo),
-	bloco_pos(Jogo, Acima, BlocoAcima),
+	bloco_pos(Jogo, Acima, BlocoAcima),!,
 	bloco(Face, _, _, _) = BlocoAbaixo,
 	bloco(_, _, Face, _) = BlocoAcima.
+
 
 %% na_borda_direita(Jogo+, Pos?) is semidet
 %
@@ -103,6 +107,7 @@ na_borda_direita(Jogo, Pos) :-
 	Local = Pos + 1,
 	0 is Local mod Colunas.
 
+
 %% na_borda_superior(Jogo+, Pos?) is semidet
 %
 %  Verdadeiro se Pos é uma posição na borda superior de Jogo. Ou seja, Pos está
@@ -112,8 +117,14 @@ na_borda_superior(Jogo, Pos) :-
 	tetravex(_, Colunas, _) = Jogo,
 	Pos < Colunas.
 
+
+%% pos_direita(Pos+, Direita?) is semidet
+%
+% Verdadeiro se Direita e a posiçao do Bloco a direita do bloco em Pos.
+
 pos_direita(Pos, Direita) :-
 	Direita is Pos + 1.
+
 
 %% pos_acima(Jogo+, Pos+, Acima?) is semidet
 %
