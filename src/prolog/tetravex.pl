@@ -57,7 +57,10 @@ solucao(Jogo, Blocos) :-
 %  adjacentes tenham o mesmo número.
 
 blocos_correspondem(Jogo) :-
-    _ = Jogo, fail.
+	tetravex(_, _, Blocos) = Jogo,
+	select(Bloco, Blocos, _),
+	bloco_pos(Jogo, Pos, Bloco),
+	corresponde_acima(Jogo, Pos).
 
 
 %% corresponde_acima(Jogo+, Pos) is semidet
