@@ -57,11 +57,26 @@ solucao(Jogo, Blocos) :-
 %  adjacentes tenham o mesmo número.
 
 blocos_correspondem(Jogo) :-
-	tetravex(_, _, Blocos) = Jogo,
-	select(Bloco, Blocos, _),
-	bloco_pos(Jogo, Pos, Bloco),
-	corresponde_acima(Jogo, Pos).
+	bloco_pos(Jogo, Pos, _),
+	corresponde_acima(Jogo, Pos),
+	corresponde_direita(Jogo, Pos).
 
+%% corresponde_esquerda(Jogo+, Pos) is semidet
+%
+% Verdadeiro se o bloco que esta em Pos corresponde com o bloco que esta
+% a direita de Pos em Jogo. Isto e, o valor da borda direita do bloco em
+% Pos deve ser igual ao valor da borda esquerda do bloco a direita de
+% Pos. Se Pos esta na borda direita, entao a posiçao direita
+% corresponde.
+corresponde_direita(Jogo, Pos) :-
+	na_borda_direita(Jogo, Pos).
+
+corresponde_direita(Jogo, Pos) :-
+	pos_direita(Pos, PosDireita),
+	bloco_pos(Jogo, Pos, Bloco),
+	bloco_pos(Jogo, PosDireita, BlocoDireita),
+	bloco(_, Face, _, _) = Bloco,
+	bloco(_, _, _, Face) = BlocoDireita.
 
 %% corresponde_acima(Jogo+, Pos) is semidet
 %
@@ -70,8 +85,7 @@ blocos_correspondem(Jogo) :-
 %  igual ao valor da borda inferior do bloco acima de Pos. Se Pos está na borda
 %  superior, então a posição acima corresponde.
 corresponde_acima(Jogo, Pos) :-
-	na_borda_superior(Jogo, Pos),
-	!.
+	na_borda_superior(Jogo, Pos).
 
 corresponde_acima(Jogo, Pos) :-
 	pos_acima(Jogo, Pos, Acima),
@@ -80,6 +94,14 @@ corresponde_acima(Jogo, Pos) :-
 	bloco(Face, _, _, _) = BlocoAbaixo,
 	bloco(_, _, Face, _) = BlocoAcima.
 
+%% na_borda_direita(Jogo+, Pos?) is semidet
+%
+%  Verdadeiro se Pos e uma posiçao na borda direita de Jogo, Ou seja,
+%  Pos esta na ultima coluna do Jogo.
+na_borda_direita(Jogo, Pos) :-
+	tetravex(_, Colunas, _) = Jogo,
+	Local = Pos + 1,
+	0 is Local mod Colunas.
 
 %% na_borda_superior(Jogo+, Pos?) is semidet
 %
@@ -89,6 +111,9 @@ corresponde_acima(Jogo, Pos) :-
 na_borda_superior(Jogo, Pos) :-
 	tetravex(_, Colunas, _) = Jogo,
 	Pos < Colunas.
+
+pos_direita(Pos, Direita) :-
+	Direita is Pos + 1.
 
 %% pos_acima(Jogo+, Pos+, Acima?) is semidet
 %
