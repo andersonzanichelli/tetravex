@@ -61,7 +61,7 @@ resolvido(Jogo, Blocos, Pos) :-
 	bloco_pos(Jogo, Pos, Candidato),
 	blocos_correspondem(Jogo, Pos),
 	ProximaPos is Pos + 1,
-	resolve_tetravex(Jogo, Resto, ProximaPos).
+	resolvido(Jogo, Resto, ProximaPos).
 
 
 %% blocos_correspondem(Jogo?, Pos) is semidet
@@ -93,24 +93,12 @@ corresponde_direita(Jogo, Pos) :-
 	bloco(_, Face, _, _) = Bloco,
 	bloco(_, _, _, Face) = BlocoDireita.
 
-
-%% corresponde_esquerda(Jogo+, Pos) is semidet
+%% corresponde_abaixo(Jogo+, Pos) is semidet
 %
-%  Verdadeiro se o bloco que esta em Pos corresponde com o bloco que
-%  esta a esquerda de Pos em Jogo. Isto e, o valor da borda esquerda do
-%  bloco em Pos deve ser igual ao valor da borda direita do bloco a
-%  esquerda de Pos. Se Pos esta na borda esquerda, entao a posiçao
-%  esquerda corresponde.
-
-corresponde_esquerda(Jogo, Pos) :-
-	na_borda_esquerda(Jogo, Pos), !.
-
-corresponde_esquerda(Jogo, Pos) :-
-	pos_esquerda(Pos, Esquerda),
-	bloco_pos(Jogo, Pos, Bloco),
-	bloco_pos(Jogo, Esquerda, BlocoEsquerda),
-	bloco(_, _, _, Face) = Bloco,
-	bloco(_, Face, _, _) = BlocoEsquerda.
+% Verdadeiro se o bloco que esta em Pos corresponde com o bloco que esta
+% a abaixo de Pos em Jogo. Isto e, o valor da borda inferior do bloco em
+% Pos deve ser igual ao valor da borda superior do bloco abaixo de
+% Pos. Se Pos esta na borda inferior, entao a posiçao abaixo corresponde.
 
 corresponde_abaixo(Jogo, Pos) :-
 	na_borda_inferior(Jogo, Pos).
@@ -151,16 +139,6 @@ na_borda_direita(Jogo, Pos) :-
 	0 is Local mod Colunas.
 
 
-%% na_borda_esquerda(Jogo+, Pos?) is semidet
-%
-%  Verdadeiro se Pos e uma posiçao na borda esquerda de Jogo, Ou seja,
-%  Pos esta na primeira coluna do Jogo.
-
-na_borda_esquerda(Jogo, Pos) :-
-	tetravex(_, Colunas, _) = Jogo,
-	0 is Pos mod Colunas.
-
-
 %% na_borda_superior(Jogo+, Pos?) is semidet
 %
 %  Verdadeiro se Pos é uma posição na borda superior de Jogo. Ou seja, Pos está
@@ -190,13 +168,6 @@ na_borda_inferior(Jogo, Pos) :-
 pos_direita(Pos, Direita) :-
 	Direita is Pos + 1.
 
-%% pos_esquerda(Pos+, Esquerda?) is semidet
-%
-% Verdadeira se Esquerda e a posiçao do Bloco a esquerda do bloco em
-% Pos.
-
-pos_esquerda(Pos, Esquerda) :-
-	Esquerda is Pos - 1.
 
 %% pos_acima(Jogo+, Pos+, Acima?) is semidet
 %
@@ -205,6 +176,7 @@ pos_esquerda(Pos, Esquerda) :-
 pos_acima(Jogo, Pos, Acima) :-
     tetravex(_, Colunas, _) = Jogo,
     Acima is Pos - Colunas.
+
 
 %% pos_abaixo(Jogo+, Pos+, Abaixo?) is semidet
 %
