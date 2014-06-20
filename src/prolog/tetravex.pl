@@ -75,7 +75,7 @@ blocos_correspondem(Jogo, Pos) :-
 	corresponde_direita(Jogo, Pos),
 	corresponde_abaixo(Jogo, Pos).
 
-%% corresponde_esquerda(Jogo+, Pos) is semidet
+%% corresponde_direita(Jogo+, Pos) is semidet
 %
 % Verdadeiro se o bloco que esta em Pos corresponde com o bloco que esta
 % a direita de Pos em Jogo. Isto e, o valor da borda direita do bloco em
